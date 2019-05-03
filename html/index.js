@@ -119,7 +119,7 @@
         MIN_JUMP_HEIGHT: 35,
         MOBILE_SPEED_COEFFICIENT: 1.2,
         RESOURCE_TEMPLATE_ID: 'audio-resources',
-        SPEED: 6,
+        SPEED: 12,
         SPEED_DROP_COEFFICIENT: 3
     };
 
@@ -1869,7 +1869,8 @@
         ACHIEVEMENT_DISTANCE: 100,
 
         // Used for conversion from pixel distance to a scaled unit.
-        COEFFICIENT: 0.025,
+        // COEFFICIENT: 0.025,
+        COEFFICIENT: 0.0125,
 
         // Flash duration in milliseconds.
         FLASH_DURATION: 1000 / 4,
