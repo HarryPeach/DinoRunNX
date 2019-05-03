@@ -20,7 +20,7 @@ Port of the Chromium "No Internet Dino" game for the Nintendo Switch console.
 
 ## Known Issues
 
-- Dino blinks when crouching on the Switch
+- Visit the [issues page](https://github.com/HarryPeach/DinoRunNX/issues)
 
 ## License
 
