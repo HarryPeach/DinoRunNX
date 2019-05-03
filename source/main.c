@@ -3,15 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
-// #include <pthread.h>
 
 // Include the main libnx system header, for Switch development
 #include <switch.h>
-// #include <hello.h>
-
-// See also libnx web.h.
-
-// This example shows how to use the web LibraryApplets.
 
 // Main program entrypoint
 int main(int argc, char *argv[])
@@ -29,9 +23,9 @@ int main(int argc, char *argv[])
     while (appletMainLoop())
     {
         // Scan all the inputs. This should be done once for each frame
-        // hidScanInput();
+        hidScanInput();
 
-        // u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
+        u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
 
         WebCommonConfig config;
         WebCommonReply reply;
@@ -47,9 +41,11 @@ int main(int argc, char *argv[])
 
             if (R_SUCCEEDED(rc))
             { // Launch the applet and wait for it to exit.
-                printf("Running webConfigShow...\n");
-                rc = webConfigShow(&config, &reply); // If you don't use reply you can pass NULL for it.
+                rc = webConfigShow(&config, &reply);
                 printf("webConfigShow(): 0x%x\n", rc);
+                if(rc == 0x5d59){ // Warn the user when it appear they havent overridden a title to run the game
+                    printf(CONSOLE_RED "!!! There was an issue showing the browser window. Make sure you're running the game through an overridden title and not the album. Hold KEY_PLUS to exit.\n" CONSOLE_WHITE);
+                }
             }
 
             if (R_SUCCEEDED(rc))
@@ -62,6 +58,9 @@ int main(int argc, char *argv[])
                 break;
             }
         }
+
+        if(kDown & KEY_PLUS)
+            break;
 
         // Update the console, sending a new frame to the display
         consoleUpdate(NULL);
