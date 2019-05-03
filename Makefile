@@ -37,8 +37,8 @@ DATA		:=	data
 INCLUDES	:=	include
 EXEFS_SRC	:=	exefs_src
 APP_TITLE	:=	Dino Run
-APP_AUTHOR	:=	Harry Peach
-APP_VERSION	:=	1.0
+APP_AUTHOR	:=	Harry Peach, Chromium Contributors
+APP_VERSION	:=	1.1
 # ROMFS	:=	romfs
 
 #---------------------------------------------------------------------------------
