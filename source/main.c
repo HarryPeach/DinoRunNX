@@ -37,11 +37,10 @@ int main(int argc, char *argv[])
 
     consoleUpdate(NULL);
 
-    Result last_result = 0;
     WebCommonConfig config;
     WebCommonReply reply;
-    WebExitReason exitReason = 0;
 
+    // Check if the applet is being run from the album
     if (appletGetAppletType() != AppletType_Application)
     {
         printf(CONSOLE_RED "ERROR: The applet cannot run if launched from the album menu, please launch by overriding a title!\n" CONSOLE_WHITE);
@@ -51,32 +50,23 @@ int main(int argc, char *argv[])
     printf("\nDebug output:\n");
     consoleUpdate(NULL);
 
-    last_result = webOfflineCreate(&config, WebDocumentKind_OfflineHtmlPage, 0, ".htdocs/dino_run/index.html");
-    if (R_FAILED(last_result))
+    Result res_create_web = webOfflineCreate(&config, WebDocumentKind_OfflineHtmlPage, 0, ".htdocs/dino_run/index.html");
+    if (R_FAILED(res_create_web))
     {
-        printf("webOfflineCreate() result: 0x%x\n", last_result);
+        printf("webOfflineCreate failed with code: 0x%x\n", res_create_web);
         return exit_error();
     }
 
-    last_result = webConfigSetFooterFixedKind(&config, WebFooterFixedKind_Hidden);
-    if (R_FAILED(last_result))
+    webConfigSetFooterFixedKind(&config, WebFooterFixedKind_Hidden);
+    webConfigSetWebAudio(&config, true);
+    webConfigSetTouchEnabledOnContents(&config, true);
+
+    Result res_config_show = webConfigShow(&config, &reply);
+    if (R_FAILED(res_config_show))
     {
-        printf("webConfigSetFooterFixedKind() result: 0x%x\n", last_result);
+        printf("webConfigShow failed with code: 0x%x\n", res_config_show);
         return exit_error();
     }
-
-    last_result = webConfigShow(&config, &reply);
-    if (R_FAILED(last_result))
-    {
-        printf("webConfigShow(): 0x%x\n", last_result);
-        return exit_error();
-    }
-
-    // Result rc = webReplyGetExitReason(&reply, &exitReason);
-    // printf("webReplyGetExitReason(): 0x%x", rc);
-    // if (R_SUCCEEDED(rc))
-    //     printf(", 0x%x", exitReason);
-    // printf("\n");
 
     return exit_graceful();
 }
