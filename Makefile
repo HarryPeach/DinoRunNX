@@ -38,7 +38,7 @@ INCLUDES	:=	include
 EXEFS_SRC	:=	exefs_src
 APP_TITLE	:=	Dino Run
 APP_AUTHOR	:=	Harry Peach, Chromium Contributors
-APP_VERSION	:=	1.1.2
+APP_VERSION	:=	1.2
 # ROMFS	:=	romfs
 
 #---------------------------------------------------------------------------------
