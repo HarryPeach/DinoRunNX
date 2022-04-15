@@ -15,9 +15,18 @@ int main(int argc, char *argv[])
 {
     consoleInit(NULL);
 
-    printf(CONSOLE_GREEN "Chromium Dino Run\n" CONSOLE_WHITE);
+    printf(CONSOLE_GREEN);
+    printf(" _____ _____ _   _  ____    _____  _    _ _   _ \n");
+    printf("|  __ \\_   _| \\ | |/ __ \\  |  __ \\| |  | | \\ | |\n");
+    printf("| |  | || | |  \\| | |  | | | |__) | |  | |  \\| |\n");
+    printf("| |  | || | | . ` | |  | | |  _  /| |  | | . ` |\n");
+    printf("| |__| || |_| |\\  | |__| | | | \\ \\| |__| | |\\  |\n");
+    printf("|_____/_____|_| \\_|\\____/  |_|  \\_\\\\____/|_| \\_|\n\n");
+    printf(CONSOLE_WHITE);
     printf("Ported by Harry Peach\n");
     printf("\nLicensed under the BSD3 license, found in the LICENSE file.\n\n");
+    printf(CONSOLE_RESET);
+
     consoleUpdate(NULL);
 
     // Check if the applet is being run from the album
