@@ -7,24 +7,8 @@
 // Include the main libnx system header, for Switch development
 #include <switch.h>
 
-// Exits the program, while also clearing up initialised resources and displaying any errors outputted during the run
-int exit_program(int code, unsigned long long sleep_timer)
-{
-    consoleUpdate(NULL);
-    svcSleepThread(sleep_timer);
-    consoleExit(NULL);
-    return code;
-}
-
-int exit_error()
-{
-    return exit_program(1, 5000000000ull);
-}
-
-int exit_graceful()
-{
-    return exit_program(0, 0ull);
-}
+#include "exits.h"
+#include "log.h"
 
 // Main program entrypoint
 int main(int argc, char *argv[])
@@ -34,37 +18,42 @@ int main(int argc, char *argv[])
     printf(CONSOLE_GREEN "Chromium Dino Run\n" CONSOLE_WHITE);
     printf("Ported by Harry Peach\n");
     printf("\nLicensed under the BSD3 license, found in the LICENSE file.\n\n");
-
     consoleUpdate(NULL);
-
-    WebCommonConfig config;
-    WebCommonReply reply;
 
     // Check if the applet is being run from the album
     if (appletGetAppletType() != AppletType_Application)
     {
-        printf(CONSOLE_RED "ERROR: The applet cannot run if launched from the album menu, please launch by overriding a title!\n" CONSOLE_WHITE);
+        log_err(CONSOLE_RED "The applet cannot run if launched from the album menu, please launch by overriding a title!\n" CONSOLE_WHITE);
         return exit_error();
     }
 
     printf("\nDebug output:\n");
     consoleUpdate(NULL);
 
+    log_dbg("Attempting to create an offline web session... ");
+    WebCommonConfig config;
     Result res_create_web = webOfflineCreate(&config, WebDocumentKind_OfflineHtmlPage, 0, ".htdocs/dino_run/index.html");
+    log_dbg("result: 0x%x\n", res_create_web);
     if (R_FAILED(res_create_web))
     {
-        printf("webOfflineCreate failed with code: 0x%x\n", res_create_web);
+        log_err("webOfflineCreate failed with code: 0x%x\n", res_create_web);
         return exit_error();
     }
 
+    log_dbg("Setting footer to fixed kind...\n");
     webConfigSetFooterFixedKind(&config, WebFooterFixedKind_Hidden);
+    log_dbg("Setting web audio...\n");
     webConfigSetWebAudio(&config, true);
+    log_dbg("Setting touch enabled...\n");
     webConfigSetTouchEnabledOnContents(&config, true);
 
+    log_dbg("Attempted to show web session...");
+    WebCommonReply reply;
     Result res_config_show = webConfigShow(&config, &reply);
+    log_dbg("result: 0x%x\n", res_config_show);
     if (R_FAILED(res_config_show))
     {
-        printf("webConfigShow failed with code: 0x%x\n", res_config_show);
+        log_err("webConfigShow failed with code: 0x%x\n", res_config_show);
         return exit_error();
     }
 
