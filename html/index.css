@@ -2,7 +2,8 @@
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file. */
 
-html, body {
+html,
+body {
   padding: 0;
   margin: 0;
   width: 100%;
@@ -28,7 +29,7 @@ html, body {
 
 .offline {
   transition: filter 1.5s cubic-bezier(0.65, 0.05, 0.36, 1),
-              background-color 1.5s cubic-bezier(0.65, 0.05, 0.36, 1);
+    background-color 1.5s cubic-bezier(0.65, 0.05, 0.36, 1);
   will-change: filter, background-color;
 }
 
