@@ -21,6 +21,7 @@
         this.outerContainerEl = document.querySelector(outerContainerId);
         this.containerEl = null;
         this.snackbarEl = null;
+        this.debugEl = document.getElementById('debug');
         this.detailsButton = this.outerContainerEl.querySelector('#details-button');
 
         this.config = opt_config || Runner.config;
@@ -58,12 +59,28 @@
         this.audioBuffer = null;
         this.soundFx = {};
 
+        // Map of game sounds to Nintendo-Permitted TM sounds
+        this.soundMap = {
+            JUMP: "SeWebZoomOut",
+            HIT: "SeFooterDecideBack",
+            SCORE: "SeWebTouchFocus",
+        };
+
         // Global web audio context for playing sounds.
         this.audioContext = null;
 
         // Images.
         this.images = {};
         this.imagesLoaded = 0;
+
+        // window.nx stub for debugging on PC
+        if (!window.nx) {
+            window.nx = {
+                playSystemSe: function(sound) {
+                    console.log("[STUB] Playing sound: " + sound)
+                },
+            }
+        }
 
         if (this.isDisabled()) {
             this.setupDisabledRunner();
@@ -87,10 +104,7 @@
     var FPS = 60;
 
     /** @const */
-    var IS_IOS = /iPad|iPhone|iPod/.test(window.navigator.platform);
-
-    /** @const */
-    var IS_MOBILE = /Android/.test(window.navigator.userAgent) || IS_IOS;
+    var IS_MOBILE = /Android/.test(window.navigator.userAgent);
 
     /** @const */
     var IS_TOUCH_ENABLED = 'ontouchstart' in window;
@@ -287,24 +301,13 @@
          * Load and decode base 64 encoded sounds.
          */
         loadSounds: function () {
-            if (!IS_IOS) {
-                this.audioContext = new AudioContext();
+            
 
-                var resourceTemplate =
-                    document.getElementById(this.config.RESOURCE_TEMPLATE_ID).content;
-
-                for (var sound in Runner.sounds) {
-                    var soundSrc =
-                        resourceTemplate.getElementById(Runner.sounds[sound]).src;
-                    soundSrc = soundSrc.substr(soundSrc.indexOf(',') + 1);
-                    var buffer = decodeBase64ToArrayBuffer(soundSrc);
-
-                    // Async, so no guarantee of order in array.
-                    this.audioContext.decodeAudioData(buffer, function (index, audioData) {
-                        this.soundFx[index] = audioData;
-                    }.bind(this, sound));
-                }
-            }
+            // var sound_list = ["SeToggleBtnFocus", "SeToggleBtnOn", "SeToggleBtnOff", "SeCheckboxFocus", "SeCheckboxOn", "SeCheckboxOff", "SeRadioBtnFocus", "SeRadioBtnOn", "SeSelectCheck", "SeSelectUncheck", "SeBtnDecide", "SeTouchUnfocus", "SeBtnFocus", "SeKeyError", "SeDialogOpen", "SeWebZoomOut", "SeWebZoomIn", "SeWebNaviFocus", "SeWebPointerFocus", "SeFooterFocus", "SeFooterDecideBack", "SeFooterDecideFinish", "SeWebChangeCursorPointer", "SeWebTouchFocus", "SeWebLinkDecide", "SeWebTextboxStartEdit", "SeWebButtonDecide", "SeWebRadioBtnOn", "SeWebCheckboxUncheck", "SeWebCheckboxCheck", "SeWebMenuListOpen"]
+            // window.nx.playSystemSe(sound_list[this.playCount]);
+            // var debugEl = document.getElementById('debug');
+            // debugEl.innerHTML = sound_list[this.playCount];
+            // this.playCount++;
         },
 
         /**
@@ -550,7 +553,7 @@
                     Math.ceil(this.distanceRan));
 
                 if (playAchievementSound) {
-                    this.playSound(this.soundFx.SCORE);
+                    this.playSound(this.soundMap.SCORE);
                 }
 
                 // Night mode.
@@ -650,11 +653,12 @@
                 e.preventDefault();
             }
 
+
             if (e.target != this.detailsButton) {
                 if (!this.crashed && (Runner.keycodes.JUMP[e.keyCode] ||
                     e.type == Runner.events.TOUCHSTART)) {
                     if (!this.playing) {
-                        // this.loadSounds();
+                        this.loadSounds();
                         this.playing = true;
                         this.update();
                         if (window.errorPageController) {
@@ -663,7 +667,7 @@
                     }
                     //  Play sound effect and jump on starting the game for the first time.
                     if (!this.tRex.jumping && !this.tRex.ducking) {
-                        this.playSound(this.soundFx.BUTTON_PRESS);
+                        this.playSound(this.soundMap.JUMP);
                         this.tRex.startJump(this.currentSpeed);
                     }
                 }
@@ -751,7 +755,7 @@
          * Game over state.
          */
         gameOver: function () {
-            this.playSound(this.soundFx.HIT);
+            this.playSound(this.soundMap.HIT);
             vibrate(200);
 
             this.stop();
@@ -810,7 +814,8 @@
                 this.distanceMeter.reset(this.highestScore);
                 this.horizon.reset();
                 this.tRex.reset();
-                this.playSound(this.soundFx.BUTTON_PRESS);
+                this.playSound(this.soundMap.JUMP);
+
                 this.invert(true);
                 this.update();
             }
@@ -831,15 +836,11 @@
 
         /**
          * Play a sound.
-         * @param {SoundBuffer} soundBuffer
+         * @param {soundMap} soundType
          */
-        playSound: function (soundBuffer) {
-            if (soundBuffer) {
-                var sourceNode = this.audioContext.createBufferSource();
-                sourceNode.buffer = soundBuffer;
-                sourceNode.connect(this.audioContext.destination);
-                sourceNode.start(0);
-            }
+        playSound: function (soundType) {
+            // this.debugEl.innerHTML = soundType;
+            window.nx.playSystemSe(soundType);
         },
 
         /**
@@ -969,7 +970,7 @@
      * @return {number}
      */
     function getTimeStamp() {
-        return IS_IOS ? new Date().getTime() : performance.now();
+        return performance.now();
     }
 
 

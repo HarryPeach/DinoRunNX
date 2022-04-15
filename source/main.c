@@ -54,10 +54,10 @@ int main(int argc, char *argv[])
 
     log_dbg("Setting footer to fixed kind...\n");
     webConfigSetFooterFixedKind(&config, WebFooterFixedKind_Hidden);
-    log_dbg("Setting web audio...\n");
-    webConfigSetWebAudio(&config, true);
     log_dbg("Setting touch enabled...\n");
     webConfigSetTouchEnabledOnContents(&config, true);
+    log_dbg("Setting boot as media player...\n");
+    webConfigSetBootAsMediaPlayer(&config, true);
 
     log_dbg("Attempted to show web session...");
     WebCommonReply reply;
