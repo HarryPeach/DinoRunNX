@@ -58,6 +58,8 @@ int main(int argc, char *argv[])
     webConfigSetTouchEnabledOnContents(&config, true);
     log_dbg("Setting boot as media player...\n");
     webConfigSetBootAsMediaPlayer(&config, true);
+    log_dbg("Setting JS extension enabled...\n");
+    webConfigSetJsExtension(&config, true);
 
     log_dbg("Attempted to show web session...");
     WebCommonReply reply;
