@@ -23,6 +23,9 @@ int main(int argc, char *argv[])
     printf("| |__| || |_| |\\  | |__| | | | \\ \\| |__| | |\\  |\n");
     printf("|_____/_____|_| \\_|\\____/  |_|  \\_\\\\____/|_| \\_|\n\n");
     printf(CONSOLE_WHITE);
+#ifndef __INTELLISENSE__
+    printf("Version %s\n", VER);
+#endif
     printf("Ported by Harry Peach\n");
     printf("\nLicensed under the BSD3 license, found in the LICENSE file.\n\n");
     printf(CONSOLE_RESET);
