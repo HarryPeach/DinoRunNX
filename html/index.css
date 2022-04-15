@@ -8,6 +8,7 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
+  font-family: sans-serif;
 }
 
 .icon {
@@ -88,4 +89,9 @@ body {
 
 #offline-resources {
   display: none;
+}
+
+#instructions {
+  position: absolute;
+  bottom: 0;
 }

@@ -361,7 +361,7 @@
             // Draw t-rex
             this.tRex = new Trex(this.canvas, this.spriteDef.TREX);
 
-            this.outerContainerEl.appendChild(this.containerEl);
+            this.outerContainerEl.insertBefore(this.containerEl, this.outerContainerEl.firstChild);
 
             if (IS_MOBILE) {
                 this.createTouchController();
@@ -658,6 +658,7 @@
                 if (!this.crashed && (Runner.keycodes.JUMP[e.keyCode] ||
                     e.type == Runner.events.TOUCHSTART)) {
                     if (!this.playing) {
+                        document.getElementById('instructions').style.display = "none";
                         this.loadSounds();
                         this.playing = true;
                         this.update();
@@ -942,7 +943,7 @@
             opt_classname : Runner.classes.CANVAS;
         canvas.width = width;
         canvas.height = height;
-        container.appendChild(canvas);
+        container.append(canvas);
 
         return canvas;
     }
